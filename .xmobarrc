@@ -1,0 +1,47 @@
+Config { overrideRedirect = False
+       --, font     = "xft:iosevka-9"
+       , font = "xft:Ubuntu:weight=bold:pixelsize=17:antialias=true:hinting=true"
+       , additionalFonts = [ "xft:FontAwesome-9"
+                           ]
+       , bgColor  = "#5f5f5f"
+       , fgColor  = "#f8f8f2"
+       , position = TopW L 90
+       , commands = [ Run Cpu
+                        [ "-L", "3"
+                        , "-H", "50"
+                        , "--high"  , "red"
+                        , "--normal", "green"
+                        , "-t", "<fn=1>\xf108</fn>  cpu: <total>%"
+                        ] 10
+                    , Run Alsa "default" "Master"
+                        [ "-t", "<fn=1>\xf028</fn> <volumestatus>"
+                        , "--suffix"  , "True"
+                        , "--"
+                        , "--on", ""
+                        ]
+                    , Run Memory ["--template", "<fn=1>\xf233</fn> mem: <usedratio>%"] 10
+                    --, Run Swap [] 10
+                    , Run DiskU [("/", "<fn=1>\xf0c7</fn>  disk: <free> free")] [] 60
+                    , Run Date "<fn=1>\xf133</fn> %Y-%d-%m <fc=#8be9fd>%H:%M</fc>" "date" 10
+                    , Run BatteryN ["BAT0"]
+                            ["-t", "<acstatus>"
+                            , "-S", "Off", "-d", "0", "-m", "3"
+                            , "-L", "10", "-H", "90", "-p", "3"
+                            , "-W", "0"
+                            , "-f", "\xf244\xf243\xf243\xf243\xf242\xf242\xf242\xf241\xf241\xf240"
+                            , "--"
+                            , "-P"
+                            --, "-a", "notify-send -u critical 'Battery running out!!!!!!'"
+                            , "-A", "5"
+                            , "-i", "<fn=1>\xf1e6</fn>"
+                            , "-O", "<fn=1><leftbar>  \xf1e6</fn> <timeleft>"
+                            , "-o", "<fn=1><leftbar></fn> <timeleft>"
+                            , "-H", "10", "-L", "7"
+                            ] 50 "batt0"
+
+                    , Run XMonadLog
+                    ]
+       , sepChar  = "%"
+       , alignSep = "}{"
+       , template = "%XMonadLog% }{ %batt0% | %alsa:default:Master% | %cpu% | %memory% | %disku% | %date% "
+       }
